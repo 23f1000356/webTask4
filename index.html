@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f4ff;
+      color: #4b0082;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #6a0dad;
+      color: white;
+    }
+
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .navbar .menu {
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    /* Selection Section */
+    .selection-container {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .selection-container h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .options button:hover {
+      background-color: #4b0082;
+    }
+
+    /* Main To-Do List Page */
+    .main-container {
+      display: flex;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .sidebar li a {
+      color: #4b0082;
+      text-decoration: none;
+    }
+
+    .sidebar li a:hover {
+      font-weight: bold;
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    .content h1 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #6a0dad;
+    }
+
+    .task-list {
+      margin-top: 20px;
+    }
+
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f0e6ff;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .task span {
+      flex: 1;
+    }
+
+    .task .datetime {
+      margin-right: 10px;
+      font-size: 14px;
+      color: #6a0dad;
+    }
+
+    .task button {
+      padding: 5px 10px;
+      background-color: #ff6666;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .task button:hover {
+      background-color: #cc0000;
+    }
+
+    .add-task {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .add-task input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .add-task button {
+      padding: 10px 15px;
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .add-task button:hover {
+      background-color: #4b0082;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">ToDoList</div>
+    <div class="menu">
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign Up</a>
+      
+    </div>
+  </div>
+
+  <!-- Selection Section -->
+  <div class="selection-container" id="selectionPage">
+    <h2>How do you plan to use the To-Do List?</h2>
+    <div class="options">
+      <button onclick="selectOption('Education')">Education</button>
+      <button onclick="selectOption('Work')">Work</button>
+      <button onclick="selectOption('Personal')">Personal</button>
+    </div>
+    <button onclick="startList()" style="padding: 10px 20px; background-color: #4b0082; color: white; border: none; border-radius: 5px; cursor: pointer;">Start List</button>
+  </div>
+
+  <!-- Main To-Do List Page -->
+  <div class="main-container" id="todoPage" style="display: none;">
+    <div class="sidebar">
+      <ul>
+        <li><a href="#">Add Task</a></li>
+        <li><a href="today.html">Today</a></li>
+        <li><a href="up.html">Upcoming</a></li>
+        <li><a href="search.html">Search</a></li>
+      </ul>
+    </div>
+    <div class="content">
+      <h1>To-Do List</h1>
+      <div class="add-task">
+        <input type="text" id="taskInput" placeholder="Add a new task..." />
+        <button onclick="addTask()">Add</button>
+      </div>
+      <div class="task-list" id="tasks"></div>
+    </div>
+  </div>
+
+  <script>
+    function selectOption(option) {
+      alert(`You selected: ${option}`);
+    }
+
+    function startList() {
+      document.getElementById('selectionPage').style.display = 'none';
+      document.getElementById('todoPage').style.display = 'flex';
+    }
+
+    const tasksContainer = document.getElementById('tasks');
+
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      if (taskInput.value.trim() === '') return;
+
+      const currentDate = new Date();
+      const dateTimeString = currentDate.toLocaleString();
+
+      const taskElement = document.createElement('div');
+      taskElement.classList.add('task');
+      taskElement.innerHTML = `
+        <span>${taskInput.value}</span>
+        <div class="datetime">${dateTimeString}</div>
+        <button onclick="deleteTask(this)">Delete</button>
+      `;
+      tasksContainer.appendChild(taskElement);
+      taskInput.value = '';
+    }
+
+          const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      
+        function addTask() {
+          const taskInput = document.getElementById('taskInput');
+          if (taskInput.value.trim() === '') return;
+      
+          const newTask = {
+            name: taskInput.value.trim(),
+            timestamp: new Date().toISOString()
+          };
+      
+          tasks.push(newTask);
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+          renderTasks();
+      
+          taskInput.value = '';
+        }
+      
+        function renderTasks() {
+          const taskList = document.getElementById('tasks');
+          taskList.innerHTML = '';
+      
+          tasks.forEach((task) => {
+            const taskElement = document.createElement('div');
+            taskElement.classList.add('task');
+            taskElement.innerHTML = `
+              <span>${task.name}</span>
+              <div class="datetime">${new Date(task.timestamp).toLocaleString()}</div>
+              <button onclick="deleteTask('${task.timestamp}')">Delete</button>
+            `;
+            taskList.appendChild(taskElement);
+          });
+        }
+      
+        function deleteTask(timestamp) {
+          const updatedTasks = tasks.filter(task => task.timestamp !== timestamp);
+          localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+          renderTasks();
+        }
+      
+        renderTasks();
+      </script>
+      
+  </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Products</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="header">
+        <div class="logo">E-market</div>
+        <nav class="nav-bar">
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#" class="cart">Cart</a></li>
+            </ul>
+            
+        </nav>
+    </header>
+
+  
+    <!-- Filters Section -->
+    <section class="filters">
+        <h2>Filter Products</h2>
+        <div class="filter-options">
+            <!-- Category Filter -->
+            <div class="filter">
+                <label for="category">Category:</label>
+                <select id="category" onchange="filterProducts()">
+                    <option value="">All</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="food">Food</option>
+                    <option value="home">Home Appliances</option>
+                    <option value="sports">Sports</option>
+                </select>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter">
+                <label for="price">Price:</label>
+                <select id="price" onchange="filterProducts()">
+                    <option value="">All</option>
+                    <option value="low">Below $100</option>
+                    <option value="medium">$100 - $500</option>
+                    <option value="high">Above $500</option>
+                </select>
+            </div>
+
+            <!-- Brand Filter -->
+            <div class="filter">
+                <label for="brand">Brand:</label>
+                <select id="brand" onchange="filterProducts()">
+                    <option value="">All</option>
+                    <option value="brand1">Brand 1</option>
+                    <option value="brand2">Brand 2</option>
+                    <option value="brand3">Brand 3</option>
+                </select>
+            </div>
+
+            <!-- Color Filter -->
+            <div class="filter">
+                <label for="color">Color:</label>
+                <select id="color" onchange="filterProducts()">
+                    <option value="">All</option>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                </select>
+            </div>
+
+            <!-- Rating Filter -->
+            <div class="filter">
+                <label for="rating">Rating:</label>
+                <select id="rating" onchange="filterProducts()">
+                    <option value="">All</option>
+                    <option value="1">1 Star & Above</option>
+                    <option value="2">2 Stars & Above</option>
+                    <option value="3">3 Stars & Above</option>
+                    <option value="4">4 Stars & Above</option>
+                </select>
+            </div>
+        </div>
+    </section>
+  
+    <!-- Product Categories -->
+    <section class="products">
+        <h2 style="color: black; font-weight: bold;">Explore Our Categories</h2>
+        <div class="content">
+            <!-- Category Container 1: Electronics -->
+            <div class="category-container electronics" data-price="medium" data-brand="brand1" data-color="blue" data-rating="4">
+                <div class="category-images">
+                    <img src="ll.jpg" alt="Electronics" class="active">
+                    <img src="ee.jpg" alt="Electronics">
+                    <img src="ff.jpg" alt="Electronics">
+                </div>
+                <div class="arrow-left arrow-button" onclick="moveImage(this, -1)">&#8592;</div>
+                <div class="arrow-right arrow-button" onclick="moveImage(this, 1)">&#8594;</div>
+                <div class="category-info">
+                    <div class="category-title">Electronics</div>
+                    <div class="category-description">Latest Gadgets & Devices</div>
+                </div>
+                <div class="category-details">
+                    <div class="product-info-set active">
+                        <p>Price: $50 - $1000</p>
+                        <p>Size: Small, Medium, Large</p>
+                        <p>Material: Plastic, Metal</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $200 - $700</p>
+                        <p>Size: Medium, Large</p>
+                        <p>Material: Metal, Glass</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $500 - $1000</p>
+                        <p>Size: Large</p>
+                        <p>Material: Steel, Plastic</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Container 2: Clothing -->
+            <div class="category-container clothing" data-price="low" data-brand="brand2" data-color="red" data-rating="3">
+                <div class="category-images">
+                    <img src="gg.png" alt="Clothing" class="active">
+                    <img src="cloh.jpg" alt="Clothing">
+                    <img src="cll.jpg" alt="Clothing">
+                </div>
+                <div class="arrow-left arrow-button" onclick="moveImage(this, -1)">&#8592;</div>
+                <div class="arrow-right arrow-button" onclick="moveImage(this, 1)">&#8594;</div>
+                <div class="category-info">
+                    <div class="category-title">Clothing</div>
+                    <div class="category-description">Trendy Fashion for All</div>
+                </div>
+                <div class="category-details">
+                    <div class="product-info-set active">
+                        <p>Price: $10 - $200</p>
+                        <p>Size: S, M, L, XL</p>
+                        <p>Material: Cotton, Wool</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $50 - $150</p>
+                        <p>Size: M, L</p>
+                        <p>Material: Polyester, Silk</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $30 - $100</p>
+                        <p>Size: S, M</p>
+                        <p>Material: Linen, Rayon</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Container 3: Food -->
+            <div class="category-container food" data-price="low" data-brand="brand3" data-color="green" data-rating="5">
+                <div class="category-images">
+                    <img src="food1.jpg" alt="Food" class="active">
+                    <img src="food2.jpg" alt="Food">
+                    <img src="food3.jpg" alt="Food">
+                </div>
+                <div class="arrow-left arrow-button" onclick="moveImage(this, -1)">&#8592;</div>
+                <div class="arrow-right arrow-button" onclick="moveImage(this, 1)">&#8594;</div>
+                <div class="category-info">
+                    <div class="category-title">Food</div>
+                    <div class="category-description">Fresh & Healthy Choices</div>
+                </div>
+                <div class="category-details">
+                    <div class="product-info-set active">
+                        <p>Price: $5 - $50</p>
+                        <p>Size: Small, Medium</p>
+                        <p>Material: Organic, Vegan</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $10 - $30</p>
+                        <p>Size: Medium, Large</p>
+                        <p>Material: Organic, Gluten-Free</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $20 - $40</p>
+                        <p>Size: Small</p>
+                        <p>Material: Non-GMO, Vegan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Container 4: Home Appliances -->
+            <div class="category-container home" data-price="high" data-brand="brand1" data-color="blue" data-rating="2">
+                <div class="category-images">
+                    <img src="fr.jpg" alt="Home" class="active">
+                    <img src="h32.jpg" alt="Home">
+                    <img src="hh.jpg" alt="Home">
+                </div>
+                <div class="arrow-left arrow-button" onclick="moveImage(this, -1)">&#8592;</div>
+                <div class="arrow-right arrow-button" onclick="moveImage(this, 1)">&#8594;</div>
+                <div class="category-info">
+                    <div class="category-title">Home Appliances</div>
+                    <div class="category-description">Smart & Efficient</div>
+                </div>
+                <div class="category-details">
+                    <div class="product-info-set active">
+                        <p>Price: $100 - $1500</p>
+                        <p>Size: Small, Medium, Large</p>
+                        <p>Material: Steel, Plastic</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $200 - $500</p>
+                        <p>Size: Medium, Large</p>
+                        <p>Material: Metal, Glass</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $500 - $1500</p>
+                        <p>Size: Large</p>
+                        <p>Material: Stainless Steel, Plastic</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Container 5: Sports -->
+            <div class="category-container sports" data-price="medium" data-brand="brand2" data-color="red" data-rating="4">
+                <div class="category-images">
+                    <img src="sp.png" alt="Sports" class="active">
+                    <img src="sp2.jpg" alt="Sports">
+                    <img src="sp3.jpg" alt="Sports">
+                </div>
+                <div class="arrow-left arrow-button" onclick="moveImage(this, -1)">&#8592;</div>
+                <div class="arrow-right arrow-button" onclick="moveImage(this, 1)">&#8594;</div>
+                <div class="category-info">
+                    <div class="category-title">Sports</div>
+                    <div class="category-description">Outdoor & Fitness Gear</div>
+                </div>
+                <div class="category-details">
+                    <div class="product-info-set active">
+                        <p>Price: $20 - $300</p>
+                        <p>Size: S, M, L</p>
+                        <p>Material: Nylon, Rubber</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $50 - $200</p>
+                        <p>Size: M, L</p>
+                        <p>Material: Polyester, Rubber</p>
+                    </div>
+                    <div class="product-info-set">
+                        <p>Price: $100 - $500</p>
+                        <p>Size: S, M</p>
+                        <p>Material: Cotton, Neoprene</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Function to show product details when a category container is clicked
+        function showDetails(container) {
+            const details = container.querySelector('.category-details');
+            details.style.display = details.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Function to filter products based on the selected filters
+        function filterProducts() {
+            const category = document.getElementById('category').value;
+            const price = document.getElementById('price').value;
+            const brand = document.getElementById('brand').value;
+            const color = document.getElementById('color').value;
+            const rating = document.getElementById('rating').value;
+
+            const containers = document.querySelectorAll('.category-container');
+            
+            containers.forEach(container => {
+                const matchCategory = category ? container.classList.contains(category) : true;
+                const matchPrice = price ? container.dataset.price === price : true;
+                const matchBrand = brand ? container.dataset.brand === brand : true;
+                const matchColor = color ? container.dataset.color === color : true;
+                const matchRating = rating ? parseInt(container.dataset.rating) >= parseInt(rating) : true;
+
+                if (matchCategory && matchPrice && matchBrand && matchColor && matchRating) {
+                    container.style.display = 'block';
+                } else {
+                    container.style.display = 'none';
+                }
+            });
+        }
+
+        // Function to move images left and right
+        function moveImage(button, direction) {
+            const container = button.closest('.category-container');
+            const images = container.querySelector('.category-images');
+            const totalImages = images.querySelectorAll('img').length;
+            const activeImage = container.querySelector('.category-images img.active');
+            let newIndex = Array.from(images.querySelectorAll('img')).indexOf(activeImage) + direction;
+
+            if (newIndex < 0) newIndex = totalImages - 1;
+            if (newIndex >= totalImages) newIndex = 0;
+
+            images.querySelectorAll('img').forEach((img, index) => {
+                img.classList.remove('active');
+                if (index === newIndex) {
+                    img.classList.add('active');
+                }
+            });
+
+            // Show the correct product information
+            const infoSets = container.querySelectorAll('.product-info-set');
+            infoSets.forEach((set, index) => {
+                set.classList.remove('active');
+                if (index === newIndex) {
+                    set.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

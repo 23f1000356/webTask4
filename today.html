@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Tasks</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f4ff;
+      color: #4b0082;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #6a0dad;
+      color: white;
+    }
+
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .navbar .menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .navbar .menu a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .navbar .menu a:hover {
+      text-decoration: underline;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+
+    .search-container input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-container button {
+      background-color: #6a0dad;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Main Content */
+    .content {
+      padding: 30px;
+    }
+
+    .content h1 {
+      font-size: 28px;
+      color: #6a0dad;
+    }
+
+    .task-list {
+      margin-top: 20px;
+    }
+
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f0e6ff;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .task span {
+      flex: 1;
+    }
+
+    .task .datetime {
+      margin-right: 10px;
+      font-size: 14px;
+      color: #6a0dad;
+    }
+
+    .task button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      background-color: #ff6666;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .task button:hover {
+      background-color: #cc0000;
+    }
+
+    .task .complete {
+      background-color: #4caf50;
+    }
+
+    .task .complete:hover {
+      background-color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">ToDoList</div>
+    <div class="menu">
+      <a href="index.html">Home</a>
+      <a href="logout.html">Logout</a>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search tasks..." oninput="searchTasks()">
+        <button onclick="searchTasks()">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <h1>Today's Tasks</h1>
+    <div class="task-list" id="tasks">
+      <!-- Tasks will be dynamically added here -->
+    </div>
+  </div>
+
+  <script>
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function renderTasks(filter = '') {
+      const taskList = document.getElementById('tasks');
+      taskList.innerHTML = '';
+
+      const today = new Date().toDateString();
+
+      tasks.forEach((task) => {
+        if (new Date(task.timestamp).toDateString() === today && task.name.includes(filter)) {
+          const taskElement = document.createElement('div');
+          taskElement.classList.add('task');
+          taskElement.innerHTML = `
+            <span>${task.name}</span>
+            <div class="datetime">${new Date(task.timestamp).toLocaleString()}</div>
+            <button class="complete" onclick="completeTask('${task.timestamp}')">Complete</button>
+            <button onclick="deleteTask('${task.timestamp}')">Delete</button>
+          `;
+          taskList.appendChild(taskElement);
+        }
+      });
+    }
+
+    function completeTask(timestamp) {
+      const taskIndex = tasks.findIndex(task => task.timestamp === timestamp);
+      if (taskIndex > -1) {
+        tasks.splice(taskIndex, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+        alert('Task marked as completed and removed!');
+      }
+    }
+
+    function deleteTask(timestamp) {
+      const taskIndex = tasks.findIndex(task => task.timestamp === timestamp);
+      if (taskIndex > -1) {
+        tasks.splice(taskIndex, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+      }
+    }
+
+    function searchTasks() {
+      const filter = document.getElementById('searchInput').value.trim();
+      renderTasks(filter);
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>

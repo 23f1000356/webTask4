@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monthly Calendar & Gantt Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f4ff;
+      color: #4b0082;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #6a0dad;
+      color: white;
+    }
+
+    .navbar .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .navbar .menu {
+      display: flex;
+      gap: 15px;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .navbar a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #6a0dad;
+    }
+
+    canvas {
+      margin-bottom: 30px;
+      width: 100% !important;
+      height: 400px;
+    }
+
+    .calendar-container {
+      margin-top: 30px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .controls select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .calendar div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .calendar div.task-date {
+      background-color: red;
+      color: white;
+    }
+
+    .calendar div:hover {
+      cursor: pointer;
+      background-color: #6a0dad;
+      color: white;
+    }
+
+    .task-list, .task-form {
+      margin-top: 20px;
+    }
+
+    .task-form input, .task-form textarea {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+    }
+
+    .task-form button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .task-form button:hover {
+      background-color: #2e7d32;
+    }
+
+    .task {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background-color: #f0e6ff;
+      border: 1px solid #6a0dad;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">Task & Gantt Manager</div>
+    <div class="menu">
+      <a href="index.html">Home</a>
+      <a href="today.html">Today</a>
+      <a href="up.html">Upcoming</a>
+    </div>
+  </div>
+
+     <h2>Monthly Calendar</h2>
+    <div class="calendar-container">
+      <!-- Calendar Controls -->
+      <div class="controls">
+        <select id="monthSelector"></select>
+        <select id="yearSelector"></select>
+      </div>
+
+      <!-- Calendar -->
+      <div id="calendar" class="calendar"></div>
+
+      <!-- Task List and Form -->
+      <div id="taskDetails">
+        <h3>Tasks for <span id="selectedDate"></span></h3>
+        <div id="taskList" class="task-list"></div>
+        <form id="taskForm" class="task-form">
+          <input type="text" id="taskTitle" placeholder="Task Title" required />
+          <textarea id="taskDescription" placeholder="Task Description"></textarea>
+          <input type="time" id="taskTime" required />
+          <button type="submit">Add Task</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || {};
+
+    // Static data for the Gantt chart
+    const ganttData = [
+      { name: 'Task 1', start: '2025-01-05', end: '2025-01-10' },
+      { name: 'Task 2', start: '2025-01-12', end: '2025-01-18' },
+      { name: 'Task 3', start: '2025-01-20', end: '2025-01-25' }
+    ];
+
+    // Render Gantt Chart
+    function renderGanttChart() {
+      const ctx = document.getElementById('ganttChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ganttData.map(task => task.name),
+          datasets: [{
+            label: 'Task Duration',
+            data: ganttData.map(task => ({
+              x: [new Date(task.start).toISOString(), new Date(task.end).toISOString()],
+              y: task.name
+            })),
+            backgroundColor: 'rgba(106, 13, 173, 0.5)',
+            borderColor: '#6a0dad',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          scales: {
+            x: { type: 'time', time: { unit: 'day' } },
+            y: { ticks: { autoSkip: false } }
+          }
+        }
+      });
+    }
+
+    function renderCalendar() {
+      const calendar = document.getElementById('calendar');
+      const taskDates = Object.keys(tasks);
+      calendar.innerHTML = '';
+
+      const currentMonth = parseInt(document.getElementById('monthSelector').value);
+      const currentYear = parseInt(document.getElementById('yearSelector').value);
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = new Date(currentYear, currentMonth, day).toDateString();
+        const isTaskDate = taskDates.includes(dateStr);
+
+        const dayElement = document.createElement('div');
+        dayElement.className = isTaskDate ? 'task-date' : '';
+        dayElement.textContent = day;
+        dayElement.addEventListener('click', () => viewTasks(dateStr));
+        calendar.appendChild(dayElement);
+      }
+    }
+
+    function populateMonthAndYearSelectors() {
+      const monthSelector = document.getElementById('monthSelector');
+      const yearSelector = document.getElementById('yearSelector');
+      const today = new Date();
+
+      // Populate months
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      monthSelector.innerHTML = '';
+      monthNames.forEach((month, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = month;
+        if (index === today.getMonth()) option.selected = true;
+        monthSelector.appendChild(option);
+      });
+
+      // Populate years
+      yearSelector.innerHTML = '';
+      for (let year = today.getFullYear() - 5; year <= today.getFullYear() + 5; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        if (year === today.getFullYear()) option.selected = true;
+        yearSelector.appendChild(option);
+      }
+
+      monthSelector.addEventListener('change', renderCalendar);
+      yearSelector.addEventListener('change', renderCalendar);
+    }
+
+    function viewTasks(date) {
+      document.getElementById('selectedDate').textContent = date;
+      const taskList = document.getElementById('taskList');
+      const taskForm = document.getElementById('taskForm');
+
+      taskList.innerHTML = '';
+      (tasks[date] || []).forEach((task, index) => {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task';
+        taskElement.innerHTML = `
+          <span>${task.title} (${task.time})</span>
+          <button onclick="deleteTask('${date}', ${index})">Delete</button>
+        `;
+        taskList.appendChild(taskElement);
+      });
+
+      taskForm.onsubmit = function (event) {
+        event.preventDefault();
+        addTask(date);
+      };
+    }
+
+    function addTask(date) {
+      const title = document.getElementById('taskTitle').value.trim();
+      const description = document.getElementById('taskDescription').value.trim();
+      const time = document.getElementById('taskTime').value;
+
+      if (!tasks[date]) tasks[date] = [];
+      tasks[date].push({ title, description, time });
+
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderCalendar();
+      viewTasks(date);
+    }
+
+    function deleteTask(date, index) {
+      tasks[date].splice(index, 1);
+      if (tasks[date].length === 0) delete tasks[date];
+
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderCalendar();
+      viewTasks(date);
+    }
+
+    populateMonthAndYearSelectors();
+    renderCalendar();
+    renderGanttChart();
+  </script>
+</body>
+</html>
